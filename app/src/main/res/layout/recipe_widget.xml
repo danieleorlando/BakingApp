@@ -10,17 +10,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:background="@color/colorPrimary"
         android:textColor="@android:color/white"
-        android:textStyle="bold|italic" />
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/recipe_ingredients_widget_tv"
+        android:id="@+id/recipeIngredientsTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:textSize="16sp"
-        android:textColor="@android:color/black"/>
+        android:textSize="14sp"
+        android:textColor="@android:color/white"/>
+
 
 </LinearLayout>

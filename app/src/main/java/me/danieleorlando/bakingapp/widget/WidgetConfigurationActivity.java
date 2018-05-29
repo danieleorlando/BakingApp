@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.google.gson.Gson;
@@ -36,16 +37,29 @@ public class WidgetConfigurationActivity extends AppCompatActivity implements Vi
 
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
-    private static final String PREF_PREFIX_KEY_RECIPE_NAME = "appwidget_recipe_name";
-    private static final String PREFS_NAME = "me.danieleorlando.bakingapp.widget.RecipeWidgetProvider";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setResult(RESULT_CANCELED);
 
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            mAppWidgetId = extras.getInt(
+                    AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+        }
+
+        if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_widget_configuration);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(getString(R.string.select_recipe));
+        setSupportActionBar(toolbar);
 
         recyclerView = findViewById(R.id.recyclerView);
         linearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false);
@@ -74,18 +88,26 @@ public class WidgetConfigurationActivity extends AppCompatActivity implements Vi
 
         });
 
-
     }
 
     @Override
     public void onClick(View v) {
 
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(WidgetConfigurationActivity.this);
-        RecipeWidgetProvider.updateAppWidget(WidgetConfigurationActivity.this, appWidgetManager, mAppWidgetId);
+        Gson gson = new Gson();
+        String jsonIngredients = gson.toJson(adapter.getRecipe((int)v.getTag()).getIngredients());
 
-        Intent resultValue = new Intent();
-        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
-        setResult(RESULT_OK, resultValue);
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(WidgetConfigurationActivity.this);
+        RecipeWidgetProvider.updateAppWidget(WidgetConfigurationActivity.this,
+                appWidgetManager,
+                mAppWidgetId,
+                adapter.getRecipe((int)v.getTag()).getName(),
+                jsonIngredients);
+
+        Intent intent = new Intent();
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+        intent.putExtra(Constants.RECIPE_NAME, adapter.getRecipe((int)v.getTag()).getName());
+        intent.putExtra(Constants.RECIPE_INGREDIENTS, jsonIngredients);
+        setResult(RESULT_OK, intent);
         finish();
 
     }

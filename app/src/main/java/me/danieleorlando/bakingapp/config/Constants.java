@@ -6,10 +6,9 @@ public class Constants {
 
     public static String RECIPE = "RECIPE";
     public static String RECIPE_NAME = "RECIPE_NAME";
+    public static String RECIPE_INGREDIENTS = "RECIPE_INGREDIENTS";
     public static String STEP = "STEP";
 
     public static String STEP_INDEX = "STEP_INDEX";
     public static String STEP_VIDEO_POSITION = "STEP_VIDEO_POSITION";
-
-    public static final String WIDGET_UPDATE = "WIDGET_UPDATE";
 }
