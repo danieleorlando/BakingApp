@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:configure="me.danieleorlando.bakingapp.widget.WidgetConfigurationActivity"
-    android:minHeight="120dp"
+    android:minHeight="160dp"
     android:minWidth="180dp"
     android:initialLayout="@layout/recipe_widget"
     android:initialKeyguardLayout="@layout/recipe_widget"

@@ -11,4 +11,5 @@ public class Constants {
 
     public static String STEP_INDEX = "STEP_INDEX";
     public static String STEP_VIDEO_POSITION = "STEP_VIDEO_POSITION";
+    public static String STEP_VIDEO_PLAY = "STEP_VIDEO_PLAY";
 }

@@ -42,6 +42,7 @@ public class StepDetailFragment extends Fragment  {
     private Handler mainHandler;
 
     private long currentPosition;
+    private boolean playWhenReady = true;
 
     public StepDetailFragment() {
     }
@@ -53,6 +54,7 @@ public class StepDetailFragment extends Fragment  {
         if(savedInstanceState != null) {
             mStep = savedInstanceState.getParcelable(Constants.STEP);
             currentPosition = savedInstanceState.getLong(Constants.STEP_VIDEO_POSITION);
+            playWhenReady = savedInstanceState.getBoolean(Constants.STEP_VIDEO_PLAY);
         }
 
         mainHandler = new Handler();
@@ -85,9 +87,9 @@ public class StepDetailFragment extends Fragment  {
             String userAgent = Util.getUserAgent(getContext(), getString(R.string.app_name));
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
             player.prepare(mediaSource);
-            player.setPlayWhenReady(true);
-            if (currentPosition>0) player.seekTo(currentPosition);
         }
+        player.setPlayWhenReady(playWhenReady);
+        if (currentPosition>0) player.seekTo(currentPosition);
     }
 
     @Override
@@ -95,24 +97,23 @@ public class StepDetailFragment extends Fragment  {
         super.onSaveInstanceState(currentState);
         currentState.putParcelable(Constants.STEP,mStep);
         currentState.putLong(Constants.STEP_VIDEO_POSITION,currentPosition);
+        currentState.putBoolean(Constants.STEP_VIDEO_PLAY,playWhenReady);
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        destroyPlayer();
+    public void onStart() {
+        super.onStart();
+        if (Util.SDK_INT > 23) {
+            initializePlayer(Uri.parse(mStep.getVideoURL()));
+        }
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        destroyPlayer();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        destroyPlayer();
+    public void onResume() {
+        super.onResume();
+        if ((Util.SDK_INT <= 23 || player == null)) {
+            initializePlayer(Uri.parse(mStep.getVideoURL()));
+        }
     }
 
     @Override
@@ -124,8 +125,10 @@ public class StepDetailFragment extends Fragment  {
     public void destroyPlayer() {
         if (player!=null) {
             currentPosition = player.getCurrentPosition();
+            playWhenReady = player.getPlayWhenReady();
             player.stop();
             player.release();
+            player = null;
         }
     }
 
@@ -133,8 +136,5 @@ public class StepDetailFragment extends Fragment  {
         mStep = step;
     }
 
-    public boolean isInLandscapeMode(Context context ) {
-        return (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
-    }
 
 }

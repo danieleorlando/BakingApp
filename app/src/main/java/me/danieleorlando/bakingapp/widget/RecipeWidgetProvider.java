@@ -58,13 +58,8 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         Type listType = new TypeToken<ArrayList<Ingredient>>(){}.getType();
         List<Ingredient> ingredientList = new Gson().fromJson(recipeIngredients, listType);
 
-        if (ingredientList!=null) {
-            StringBuilder sb = new StringBuilder();
-            for (Ingredient ingredient : ingredientList) {
-                sb.append(ingredient.getIngredient()).append("\n");
-            }
-            views.setTextViewText(R.id.recipeIngredientsTv, sb.toString());
-        }
+
+
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 }
