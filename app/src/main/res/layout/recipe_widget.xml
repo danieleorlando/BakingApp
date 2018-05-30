@@ -15,10 +15,13 @@
         android:textColor="@android:color/white"
         android:textStyle="bold" />
 
-    <ListView
-        android:id="@+id/recipeIngredientsLv"
+    <TextView
+        android:id="@+id/recipeIngredientsTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:scrollbars="vertical"
+        android:textColor="@android:color/white"
         android:layout_margin="8dp" />
 
 </LinearLayout>

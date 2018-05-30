@@ -1,6 +1,10 @@
 package me.danieleorlando.bakingapp.ui;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,6 +17,7 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.danieleorlando.bakingapp.IdlingResource.SimpleIdlingResource;
 import me.danieleorlando.bakingapp.R;
 import me.danieleorlando.bakingapp.adapter.RecipeAdapter;
 import me.danieleorlando.bakingapp.api.ApiService;
@@ -32,10 +37,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private GridLayoutManager gridLayoutManager;
     private LinearLayoutManager linearLayoutManager;
 
+    @Nullable
+    private SimpleIdlingResource mIdlingResource;
+
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (mIdlingResource == null) {
+            mIdlingResource = new SimpleIdlingResource();
+        }
+        return mIdlingResource;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getIdlingResource();
 
         setupUI();
 
@@ -50,10 +69,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onResponse(Call<ArrayList<Recipe>> call, Response<ArrayList<Recipe>> response) {
                 getRecipes(response.body());
+                mIdlingResource.setIdleState(true);
             }
 
             @Override
             public void onFailure(Call<ArrayList<Recipe>> call, Throwable t) {
+                mIdlingResource.setIdleState(true);
             }
 
         });
