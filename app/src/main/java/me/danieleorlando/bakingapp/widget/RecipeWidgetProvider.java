@@ -35,11 +35,13 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
         Bundle extras = intent.getExtras();
-        if (extras.containsKey(Constants.RECIPE_NAME)) {
-            recipeName = intent.getStringExtra(Constants.RECIPE_NAME);
-            recipeIngredients = intent.getStringExtra(Constants.RECIPE_INGREDIENTS);
-            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-            updateAppWidget(context, appWidgetManager, extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID), recipeName, recipeIngredients);
+        if (extras!=null) {
+            if (extras.containsKey(Constants.RECIPE_NAME)) {
+                recipeName = intent.getStringExtra(Constants.RECIPE_NAME);
+                recipeIngredients = intent.getStringExtra(Constants.RECIPE_INGREDIENTS);
+                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+                updateAppWidget(context, appWidgetManager, extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID), recipeName, recipeIngredients);
+            }
         }
     }
 
