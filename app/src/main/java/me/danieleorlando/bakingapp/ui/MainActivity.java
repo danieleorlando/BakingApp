@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         getIdlingResource();
 
+        mIdlingResource.setIdleState(false);
+
         setupUI();
 
         Retrofit retrofit = new Retrofit.Builder()
